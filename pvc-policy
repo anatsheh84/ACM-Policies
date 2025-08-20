@@ -46,3 +46,17 @@ spec:
         remediationAction: enforce
         severity: medium
   remediationAction: enforce
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: policy-resourcequota-placement
+  namespace: open-cluster-management-global-set
+spec:
+  tolerations:
+    - key: cluster.open-cluster-management.io/unreachable
+      operator: Exists
+    - key: cluster.open-cluster-management.io/unavailable
+      operator: Exists
+  clusterSets:
+    - global
