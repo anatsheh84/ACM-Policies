@@ -6,7 +6,7 @@ metadata:
   annotations:
     policy.open-cluster-management.io/description: Enforces ResourceQuota to limit PVC count and total storage, plus LimitRange to prevent individual PVCs larger than 12Gi in NSXXX namespace
   name: policy-resourcequota
-  namespace: open-cluster-management
+  namespace: open-cluster-management-global-set
 spec:
   disabled: false
   policy-templates:
