@@ -1,0 +1,48 @@
+# ACM polict to setup a resource quota on specific namespace NSXXX with following specs:
+# 10 PVCs Max, 100GB Total Storage Max, 12GB maxi=imum single PVC size
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  annotations:
+    policy.open-cluster-management.io/description: Enforces ResourceQuota to limit PVC count and total storage, plus LimitRange to prevent individual PVCs larger than 12Gi in NSXXX namespace
+  name: policy-resourcequota
+  namespace: open-cluster-management
+spec:
+  disabled: false
+  policy-templates:
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: policy-resourcequota
+      spec:
+        namespaceSelector:
+          include:
+          - NSXXX
+        object-templates:
+        - complianceType: musthave
+          objectDefinition:
+            apiVersion: v1
+            kind: ResourceQuota
+            metadata:
+              name: pvc-size-quota
+              namespace: NSXXX
+            spec:
+              hard:
+                persistentvolumeclaims: "10"
+                requests.storage: 100Gi
+        - complianceType: musthave
+          objectDefinition:
+            apiVersion: v1
+            kind: LimitRange
+            metadata:
+              name: pvc-size-limit
+              namespace: NSXXX
+            spec:
+              limits:
+              - max:
+                  storage: 12Gi
+                type: PersistentVolumeClaim
+        remediationAction: enforce
+        severity: medium
+  remediationAction: enforce
